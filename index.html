@@ -39,15 +39,34 @@
 					const user_div =
 						document.createElement("div");
 
+					let out_string = "";
+
+					for (
+						let i = 0;
+						i < user.past_moves.length;
+						i++
+					) {
+						const operation =
+							user.past_moves[i];
+
+						if (operation > 0) {
+							out_string += `+${operation}`;
+						} else {
+							out_string += `${operation}`;
+						}
+
+						if (
+							i !=
+							user.past_moves.length -
+								1
+						) {
+							out_string += ", ";
+						}
+					}
+
 					const user_text =
 						document.createElement("h3");
-					user_text.innerText = `${user.name}: ${
-						user.score
-					}, Total Moves: ${
-						user.total_moves
-					}, Moves: ${user.past_moves.join(
-						", "
-					)}`;
+					user_text.innerText = `${user.name}: ${user.score}, Total Moves: ${user.total_moves}, Moves: ${out_string}`;
 
 					const user_plus =
 						document.createElement(
