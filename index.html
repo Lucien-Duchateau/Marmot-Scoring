@@ -164,6 +164,13 @@
 				);
 			});
 
+			window.addEventListener("unload", function () {
+				localStorage.setItem(
+					"users",
+					JSON.stringify(users)
+				);
+			});
+
 			// Ensure data is saved when the page visibility changes (for mobile)
 			document.addEventListener(
 				"visibilitychange",
