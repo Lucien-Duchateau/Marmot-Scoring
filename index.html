@@ -156,13 +156,29 @@
 				DisplayValues();
 			}
 
-			// Save users to localStorage on window unload
-			window.onbeforeunload = function () {
+			// Save users to localStorage on window unload or page hide
+			window.addEventListener("beforeunload", function () {
 				localStorage.setItem(
 					"users",
 					JSON.stringify(users)
 				);
-			};
+			});
+
+			// Ensure data is saved when the page visibility changes (for mobile)
+			document.addEventListener(
+				"visibilitychange",
+				function () {
+					if (
+						document.visibilityState ===
+						"hidden"
+					) {
+						localStorage.setItem(
+							"users",
+							JSON.stringify(users)
+						);
+					}
+				}
+			);
 		</script>
 	</body>
 </html>
