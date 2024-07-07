@@ -29,13 +29,32 @@
 
 			let users = [];
 
-			// Function to display users
-			function DisplayValues() {
-				// Clear current display
+			function DisplayUsers() {
 				users_display.innerHTML = "";
 
-				// Render each user
+				let clone = users.slice();
+
+				clone.sort((a, b) => a.score - b.score);
+
+				clone.forEach((sortedUser, sortedIndex) => {
+					let originalUserIndex = users.findIndex(
+						(user) => user === sortedUser
+					);
+
+					if (originalUserIndex !== -1) {
+						users[
+							originalUserIndex
+						].position = sortedIndex + 1;
+					}
+				});
+
+				let user_lost = false;
+
 				users.forEach((user, index) => {
+					if (user.score >= 100) {
+						user_lost = true;
+					}
+
 					const user_div =
 						document.createElement("div");
 
@@ -66,13 +85,14 @@
 
 					const user_text =
 						document.createElement("h3");
-					user_text.innerText = `${user.name}: ${user.score}, Total Moves: ${user.total_moves}, Moves: ${out_string}`;
+					user_text.innerText = `#${user.position} ${user.name}: ${user.score}, Total Moves: ${user.total_moves}, Moves: ${out_string}`;
 
 					const user_plus =
 						document.createElement(
 							"button"
 						);
 					user_plus.innerText = "+";
+					user_plus.classList = "btn";
 					user_plus.onclick = function () {
 						let add_amt =
 							prompt("Add Amount");
@@ -104,7 +124,7 @@
 							users[
 								index
 							].total_moves += 1;
-							DisplayValues();
+							DisplayUsers();
 						}
 					};
 
@@ -112,6 +132,34 @@
 					user_div.appendChild(user_plus);
 					users_display.appendChild(user_div);
 				});
+
+				if (user_lost == true) {
+					for (
+						let i = 0;
+						i <
+						users_display.children.length;
+						i++
+					) {
+						let user_div =
+							users_display.children[
+								i
+							];
+
+						Array.from(
+							user_div.children
+						).forEach((child) => {
+							if (
+								child.classList ==
+								"btn"
+							)
+								[
+									user_div.removeChild(
+										child
+									),
+								];
+						});
+					}
+				}
 			}
 
 			// Function to clear users with confirmation
@@ -123,7 +171,7 @@
 				) {
 					users = [];
 					localStorage.removeItem("users");
-					DisplayValues();
+					DisplayUsers();
 				}
 			};
 
@@ -141,9 +189,10 @@
 							score: 0,
 							past_moves: [],
 							total_moves: 0,
+							position: 0,
 						});
 						add_user_input.value = "";
-						DisplayValues();
+						DisplayUsers();
 					}
 				}
 			};
@@ -153,7 +202,7 @@
 				users = JSON.parse(
 					localStorage.getItem("users")
 				);
-				DisplayValues();
+				DisplayUsers();
 			}
 
 			// Save users to localStorage on window unload or page hide
